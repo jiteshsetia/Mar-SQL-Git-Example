@@ -1,52 +1,18 @@
--- Customers Table
-CREATE TABLE customers (
-    customer_id INT PRIMARY KEY,
-    company_name VARCHAR(10) NOT NULL,
-    contact_name VARCHAR(10) NOT NULL,
-    contacttitle VARCHAR(10) NOT NULL,
-    address VARCHAR(10) NOT NULL,
-    city VARCHAR(10) NOT NULL,
-    country VARCHAR(10) NOT NULL);
+--query to display list of suppliers from a particular country
+select * from suppliers
+where country='USA'
 
---Orders Table
-CREATE TABLE Orders (
-  Order_id INT PRIMARY KEY,    
-    Employee_ID INT,
-    OrderDate Date,
-    ShippedDate Date,
-   ShipVia VARCHAR(255) NOT NULL,
-   Freight VARCHAR(255) NOT NULL,
-   Shipaddress VARCHAR(255) NOT NULL,
-   ShipCity VARCHAR(255) NOT NULL,
-   ShipPostalcode VARCHAR(255) NOT NULL,
- customer_id int REFERENCES customers(customer_id)  
-);
+--query to display list of orders where quantity ordered are more than 20 and discount is greater than 2%
+select * from orderdetails
+where quantity>20 and discount>0.02
 
--- OrderDetails Table
-CREATE TABLE OrderDetails (
-    Orderdetails VARCHAR(100) PRIMARY KEY,
-    UnitPrice decimal(10,2),
-    Discount decimal(10,2),
-    quantity INT,
-   order_id int REFERENCES orders(order_id),
-    ProductsID int REFERENCES Products(ProductsID)
-);
+--query to display inventory levels by desc order with aparticular supplierId
+select p.productsid, p.recorderlevel as Inventory_level
+from products p
+where supplierID=4
+order by Inventory_level desc
 
--- Products Table
-CREATE TABLE Products (
-    ProductsID INT PRIMARY KEY,
-    ProductName VARCHAR(100),
-    CategoryID INT,
-    UnitPrice decimal(10,2),
-    RecorderLevel INT,
-    supplierid int REFERENCES Suppliers(supplierid)
-);
-
--- Suppliers Table
-CREATE TABLE Suppliers (
-SupplierID INT PRIMARY KEY,
-contact_name VARCHAR(10) NOT NULL,
-    contacttitle VARCHAR(10) NOT NULL,
-    address VARCHAR(10) NOT NULL,
-    city VARCHAR(10) NOT NULL,
-    country VARCHAR(10) NOT NULL);
+--query to select shipping orders from a customer ID having customer details like ID, Name city and country
+select o.order_id, o.orderdate, o.shippeddate, c.customer_id, c.city, c.contact_name, c.country
+from customers c
+Left Join orders o on c.customer_id=o.customer_id
